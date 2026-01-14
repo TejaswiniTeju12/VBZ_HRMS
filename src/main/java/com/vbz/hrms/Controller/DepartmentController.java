@@ -1,11 +1,11 @@
-package com.vbz.hrms.Controller;
+package com.vbz.hrms.controller;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.vbz.hrms.Service.DepartmentService;
 import com.vbz.hrms.dto.DepartmentResponseDTO;
+import com.vbz.hrms.service.DepartmentService;
 
 @RestController
 @RequestMapping("/api/departments")

@@ -19,6 +19,7 @@ public class SalaryDetails {
     private BigDecimal basic;
     private BigDecimal hra;
     private BigDecimal conveyanceAllowance;
+    private BigDecimal pf;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -119,4 +120,12 @@ public class SalaryDetails {
     public void markDeleted() {
         this.deletedOn = LocalDateTime.now();
     }
+
+	public BigDecimal getPf() {
+		return pf;
+	}
+
+	public void setPf(BigDecimal pf) {
+		this.pf = pf;
+	}
 }

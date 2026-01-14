@@ -1,4 +1,4 @@
-package com.vbz.hrms.Service;
+package com.vbz.hrms.service;
 import com.vbz.hrms.Respositoy.Role_MatsreRespo;
 
 import java.util.Optional;
@@ -73,6 +73,8 @@ public class UserServiceImpl implements UserService {
 	            .orElseThrow(() -> new RuntimeException("User role not assigned"));
 	    
 	    session.setAttribute("LOGGED_IN_USER_ID", user.getId());
+	    session.setAttribute("LOGGED_IN_ROLE", userRole.getRole().getRoleName());  
+
 
 	    return userRole.getRole().getId() + ",  status : " + user.getStatus();
 	}

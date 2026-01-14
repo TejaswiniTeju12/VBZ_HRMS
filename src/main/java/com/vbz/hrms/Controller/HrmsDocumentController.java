@@ -1,4 +1,4 @@
-package com.vbz.hrms.Controller;
+package com.vbz.hrms.controller;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.model.GridFSUploadOptions;
 import com.vbz.hrms.Respositoy.HrmsDocumentRepository;

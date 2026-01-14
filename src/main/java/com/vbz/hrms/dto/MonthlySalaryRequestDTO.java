@@ -2,56 +2,47 @@ package com.vbz.hrms.dto;
 
 import java.math.BigDecimal;
 
-public class MonthlySalaryRequestDTO {
+import lombok.Data;
 
+@Data
+public class MonthlySalaryRequestDTO {
     private Long userId;
-    private BigDecimal basic;
-    private BigDecimal ctc;
-    private BigDecimal hra;
-    private BigDecimal conveyanceAllowance;
-    private Integer totalWorkingDays;
-    private Integer totalDays; // present days
-	public Long getUserId() {
+    private Integer month;
+    private Integer year;
+    private Integer totalDays;
+    private Integer actualWorkingDays;
+    
+    
+    public Long getUserId() {
 		return userId;
 	}
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	public BigDecimal getBasic() {
-		return basic;
+	public Integer getMonth() {
+		return month;
 	}
-	public void setBasic(BigDecimal basic) {
-		this.basic = basic;
+	public void setMonth(Integer month) {
+		this.month = month;
 	}
-	public BigDecimal getCtc() {
-		return ctc;
+	public Integer getYear() {
+		return year;
 	}
-	public void setCtc(BigDecimal ctc) {
-		this.ctc = ctc;
-	}
-	public BigDecimal getHra() {
-		return hra;
-	}
-	public void setHra(BigDecimal hra) {
-		this.hra = hra;
-	}
-	public BigDecimal getConveyanceAllowance() {
-		return conveyanceAllowance;
-	}
-	public void setConveyanceAllowance(BigDecimal conveyanceAllowance) {
-		this.conveyanceAllowance = conveyanceAllowance;
-	}
-	public Integer getTotalWorkingDays() {
-		return totalWorkingDays;
-	}
-	public void setTotalWorkingDays(Integer totalWorkingDays) {
-		this.totalWorkingDays = totalWorkingDays;
+	public void setYear(Integer year) {
+		this.year = year;
 	}
 	public Integer getTotalDays() {
 		return totalDays;
 	}
 	public void setTotalDays(Integer totalDays) {
 		this.totalDays = totalDays;
+	}
+	
+	public Integer getActualWorkingDays() {
+		return actualWorkingDays;
+	}
+	public void setActualWorkingDays(Integer actualWorkingDays) {
+		this.actualWorkingDays = actualWorkingDays;
 	}
 
 }

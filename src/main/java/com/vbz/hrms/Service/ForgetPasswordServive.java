@@ -1,4 +1,4 @@
-package com.vbz.hrms.Service;
+package com.vbz.hrms.service;
 
 import java.util.Random;
 

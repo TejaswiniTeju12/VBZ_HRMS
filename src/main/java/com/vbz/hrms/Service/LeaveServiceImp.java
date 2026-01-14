@@ -1,4 +1,4 @@
-package com.vbz.hrms.Service;
+package com.vbz.hrms.service;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -120,7 +120,10 @@ public class LeaveServiceImp implements LeaveService {
 			throw new IllegalStateException("user not login");
 		}
 		
-		Leave leave=leaveRespo.findById(id)
+		User user=userResp.findById(loggedinuserid)
+				.orElseThrow(()-> new EntityNotFoundException("user not found"));
+		
+			Leave leave=leaveRespo.findById(id)
 					.orElseThrow(()-> new EntityNotFoundException("leave not found"));
 			
 			if(!"PENDING".equals(leave.getLeaveStatus())) {
