@@ -12,4 +12,11 @@ public interface MonthlySalaryService {
     List<MonthlySalaryResponseDTO> getSalaryByMonthYear(Integer year, Integer month);
 
     List<MonthlySalaryResponseDTO> mySalary(HttpSession session);
+    
+    MonthlySalaryResponseDTO mySalaryByMonthYear(
+            Integer month,
+            Integer year,
+            HttpSession session
+    );
+    
 }

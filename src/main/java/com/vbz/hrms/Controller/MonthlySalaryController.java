@@ -39,7 +39,13 @@ public class MonthlySalaryController {
     }
 
     @GetMapping("/my-salary")
-    public ResponseEntity<List<MonthlySalaryResponseDTO>> mySalary(HttpSession session) {
-        return ResponseEntity.ok(salaryService.mySalary(session));
+    public ResponseEntity<MonthlySalaryResponseDTO> mySalary(
+            @RequestParam Integer month,
+            @RequestParam Integer year,
+            HttpSession session) {
+
+        return ResponseEntity.ok(
+        		salaryService.mySalaryByMonthYear(month, year, session)
+        );
     }
 }

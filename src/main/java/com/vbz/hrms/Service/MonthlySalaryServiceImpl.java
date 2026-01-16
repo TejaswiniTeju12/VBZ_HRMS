@@ -20,7 +20,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 
 @Service
-@Transactional
+
 public class MonthlySalaryServiceImpl implements MonthlySalaryService {
 
     private final UserResp userRepo;
@@ -35,23 +35,32 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
         this.monthlyRepo = monthlyRepo;
     }
 
-
+@Override
+@Transactional
     public String generateMonthlySalary(MonthlySalaryRequestDTO dto, HttpSession session) {
 
-        Long userId = (Long) session.getAttribute("LOGGED_IN_USER_ID");
-        if (userId == null) throw new IllegalStateException("HR not logged in");
+	Long userId = (Long) session.getAttribute("LOGGED_IN_USER_ID");
+	String role = (String) session.getAttribute("LOGGED_IN_ROLE");
+
+	if (userId == null || role == null) {
+	    throw new RuntimeException("Session expired. Please login again.");
+	}
+
+	if (!"HR".equalsIgnoreCase(role)) {
+	    throw new RuntimeException("Access denied. Only HR can generate salary");
+	}
+    
+	User generatedBy = userRepo.findById(userId)
+	        .orElseThrow(() -> new EntityNotFoundException("HR not found"));
+
         
-        String role = (String) session.getAttribute("LOGGED_IN_ROLE");
-        if (!role.equalsIgnoreCase("HR")) {
-            throw new RuntimeException("Access denied. Only HR can generate salary");
-        }
-        
-        if (userId == null || role == null) {
-            throw new RuntimeException("Session expired. Please login again.");
-        }
-        
-        User hr = userRepo.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("HR not found"));
+	if (dto.getTotalDays() <= 0 || dto.getActualWorkingDays() < 0) {
+	    throw new IllegalArgumentException("Invalid working days");
+	}
+
+	if (dto.getActualWorkingDays() > dto.getTotalDays()) {
+	    throw new IllegalArgumentException("Actual working days cannot exceed total days");
+	}
 
         User employee = userRepo.findById(dto.getUserId())
                 .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
@@ -62,12 +71,14 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
 
         SalaryDetails salary = salaryRepo.findByUser(employee)
                 .orElseThrow(() -> new RuntimeException("Salary details not set"));
-
-        // Yearly → Monthly
-        BigDecimal basicPerMonth = salary.getBasic().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-        BigDecimal hraPerMonth = salary.getHra().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-        BigDecimal convPerMonth = salary.getConveyanceAllowance().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
-
+        
+        BigDecimal months = BigDecimal.valueOf(12);
+        
+        // Yearly to Monthly
+        BigDecimal basicPerMonth = salary.getBasic().divide(months, 2, RoundingMode.HALF_UP);
+        BigDecimal hraPerMonth = salary.getHra().divide(months, 2, RoundingMode.HALF_UP);
+        BigDecimal convPerMonth = salary.getConveyanceAllowance().divide(months, 2, RoundingMode.HALF_UP);
+       
         // Per day
         BigDecimal totalDays = BigDecimal.valueOf(dto.getTotalDays());
         BigDecimal workedDays =BigDecimal.valueOf(dto.getActualWorkingDays());
@@ -80,7 +91,7 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
 
         MonthlySalary ms = new MonthlySalary();
         ms.setUser(employee);
-        ms.setGeneratedBy(hr);
+        ms.setGeneratedBy(generatedBy);
         ms.setMonth(dto.getMonth());
         ms.setYear(dto.getYear());
         ms.setTotalDays(dto.getTotalDays());
@@ -135,4 +146,31 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
         dto.setYear(s.getYear());
         return dto;
     }
+    
+    @Override
+    public MonthlySalaryResponseDTO mySalaryByMonthYear(
+            Integer month, Integer year, HttpSession session) {
+
+        Long userId = (Long) session.getAttribute("LOGGED_IN_USER_ID");
+        String role = (String) session.getAttribute("LOGGED_IN_ROLE");
+
+        if (userId == null || role == null) {
+            throw new RuntimeException("Session expired. Please login again.");
+        }
+
+        if (!"EMPLOYEE".equalsIgnoreCase(role)) {
+            throw new RuntimeException("Access denied");
+        }
+
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        MonthlySalary salary = monthlyRepo
+                .findByUserAndMonthAndYear(user, month, year)
+                .orElseThrow(() ->
+                        new RuntimeException("Salary not generated for selected month"));
+
+        return map(salary); // reuse your existing mapper
+    }
+
 }
