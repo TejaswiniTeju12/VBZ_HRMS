@@ -27,7 +27,6 @@ public class SalaryPercentageServiceImpl implements SalaryPercentageService {
         config.setBasicPercent(dto.getBasicPercent());
         config.setHraPercent(dto.getHraPercent());
         config.setPfPercent(dto.getPfPercent());
-        config.setConveyancePercent(dto.getConveyancePercent());
 
         repo.save(config);
 
@@ -45,8 +44,6 @@ public class SalaryPercentageServiceImpl implements SalaryPercentageService {
         dto.setBasicPercent(config.getBasicPercent());
         dto.setHraPercent(config.getHraPercent());
         dto.setPfPercent(config.getPfPercent());
-        dto.setConveyancePercent(config.getConveyancePercent());
-
         return dto;
     }
 }

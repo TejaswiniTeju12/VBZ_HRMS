@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import com.vbz.hrms.dto.SalaryPercentageDTO;
 import com.vbz.hrms.service.SalaryPercentageService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/salary-config")
 public class SalaryPercentageController {
@@ -17,10 +19,10 @@ public class SalaryPercentageController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody SalaryPercentageDTO dto) {
+    public ResponseEntity<String> save(@Valid @RequestBody SalaryPercentageDTO dto) {
         return ResponseEntity.ok(service.savePercentage(dto));
     }
-
+  
     @GetMapping("/get")
     public ResponseEntity<SalaryPercentageDTO> get() {
         return ResponseEntity.ok(service.getPercentage());
