@@ -1,5 +1,6 @@
 package com.vbz.hrms.service;
 
+import com.vbz.hrms.dto.GetUserIdResponseDTO;
 import com.vbz.hrms.dto.RoleReq;
 import com.vbz.hrms.dto.UserRequestDto;
 import com.vbz.hrms.dto.UserRoleRequestDto;
@@ -18,10 +19,6 @@ public interface UserService {
  Role_Master createRole(RoleReq dto);
 
  User_Role assignRole(UserRoleRequestDto dto, HttpSession session);
-
-
-
-
-	
-
+ 
+ GetUserIdResponseDTO getUserIdByUserName(String username);
 }

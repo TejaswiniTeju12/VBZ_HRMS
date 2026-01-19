@@ -2,22 +2,30 @@ package com.vbz.hrms.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.vbz.hrms.Respositoy.UserResp;
-import com.vbz.hrms.service.UserService;
+import com.vbz.hrms.dto.GetUserIdRequestDTO;
+import com.vbz.hrms.dto.GetUserIdResponseDTO;
 import com.vbz.hrms.dto.RoleReq;
 import com.vbz.hrms.dto.UserRequestDto;
 import com.vbz.hrms.dto.UserRoleRequestDto;
 import com.vbz.hrms.model.Role_Master;
 import com.vbz.hrms.model.User;
 import com.vbz.hrms.model.User_Role;
+import com.vbz.hrms.service.UserService;
 import com.vbz.hrms.util.ApiResponse;
 
 import jakarta.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
+
 public class UserController {
 
     private final UserService userService;
@@ -76,8 +84,14 @@ public class UserController {
         }
     }
     
- 
-    
+    @GetMapping("/get-id")
+    public ResponseEntity<GetUserIdResponseDTO> getUserId(
+            @RequestParam String username) {
+
+        return ResponseEntity.ok(
+                userService.getUserIdByUserName(username));
+    }
+
 }
     	
   
