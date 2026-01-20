@@ -19,6 +19,7 @@ public class MonthlySalary {
     
     private BigDecimal totalSalary;
     private BigDecimal actualSalary;
+    private BigDecimal pf;
     
     private Integer actualWorkingDays; 
     private Integer totalDays; 
@@ -169,7 +170,14 @@ public class MonthlySalary {
 		    this.generatedBy = generatedBy;
 		}
 
+		public BigDecimal getPf() {
+			return pf;
+		}
 
+		public void setPf(BigDecimal pf) {
+			this.pf = pf;
+		}
+		
 
 
 

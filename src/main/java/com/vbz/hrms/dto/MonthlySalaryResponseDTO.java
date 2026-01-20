@@ -19,6 +19,7 @@ public class MonthlySalaryResponseDTO {
     private BigDecimal basic;
     private BigDecimal hra;
     private BigDecimal conveyanceAllowance;
+    private BigDecimal pf;
     private BigDecimal totalSalary;
     
     private Long generatedById;
@@ -105,6 +106,12 @@ public class MonthlySalaryResponseDTO {
 	}
 	public void setGeneratedByName(String generatedByName) {
 		this.generatedByName = generatedByName;
+	}
+	public BigDecimal getPf() {
+		return pf;
+	}
+	public void setPf(BigDecimal pf) {
+		this.pf = pf;
 	}
 
 	

@@ -26,8 +26,18 @@ public class PersonalDetails {
     private String nationality;
     private String maritalStatus;
     private String bloodGroup;
-
     private String aadhaarNumber;
+    private String panNumber;
+
+    private String phoneNumber;
+    private String emailId;
+
+    private String address1;
+    private String address2;
+
+    private String emergencyContactName;
+    private String emergencyPhoneNumber;
+    
     public Long getId() {
 		return id;
 	}
@@ -195,17 +205,6 @@ public class PersonalDetails {
 	public void setDeletedOn(LocalDateTime deletedOn) {
 		this.deletedOn = deletedOn;
 	}
-
-	private String panNumber;
-
-    private String phoneNumber;
-    private String emailId;
-
-    private String address1;
-    private String address2;
-
-    private String emergencyContactName;
-    private String emergencyPhoneNumber;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)

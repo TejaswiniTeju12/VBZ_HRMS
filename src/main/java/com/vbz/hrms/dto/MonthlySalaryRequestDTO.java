@@ -13,6 +13,7 @@ public class MonthlySalaryRequestDTO {
     private Integer actualWorkingDays;
     
     
+    
     public Long getUserId() {
 		return userId;
 	}
@@ -44,5 +45,6 @@ public class MonthlySalaryRequestDTO {
 	public void setActualWorkingDays(Integer actualWorkingDays) {
 		this.actualWorkingDays = actualWorkingDays;
 	}
+	
 
 }

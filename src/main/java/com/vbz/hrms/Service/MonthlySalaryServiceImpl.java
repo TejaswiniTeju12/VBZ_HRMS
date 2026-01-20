@@ -100,7 +100,7 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
         ms.setHra(hraPay);
         ms.setConveyanceAllowance(convPay);
         ms.setTotalSalary(totalSalary);
-
+        
         monthlyRepo.save(ms);
 
         return "Monthly salary generated successfully";
@@ -141,6 +141,8 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
         dto.setBasic(s.getBasic());
         dto.setHra(s.getHra());
         dto.setConveyanceAllowance(s.getConveyanceAllowance());
+        dto.setPf(dto.getPf() != null ? dto.getPf() : BigDecimal.ZERO);
+
         dto.setTotalSalary(s.getTotalSalary());
         dto.setMonth(s.getMonth());
         dto.setYear(s.getYear());
