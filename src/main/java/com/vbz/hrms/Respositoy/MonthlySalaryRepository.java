@@ -17,5 +17,6 @@ public interface MonthlySalaryRepository extends JpaRepository<MonthlySalary, Lo
     
     Optional<MonthlySalary> findByUserAndMonthAndYear(
             User user, Integer month, Integer year);
+	boolean existsByMonthAndYear(Integer month, Integer year);
 }
 

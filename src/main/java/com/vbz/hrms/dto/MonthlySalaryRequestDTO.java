@@ -1,18 +1,13 @@
 package com.vbz.hrms.dto;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 
-import lombok.Data;
-
-@Data
 public class MonthlySalaryRequestDTO {
     private Long userId;
     private Integer month;
     private Integer year;
-    private Integer totalDays;
+  //private Integer totalDays;
     private Integer actualWorkingDays;
-    
-    
     
     public Long getUserId() {
 		return userId;
@@ -32,13 +27,6 @@ public class MonthlySalaryRequestDTO {
 	public void setYear(Integer year) {
 		this.year = year;
 	}
-	public Integer getTotalDays() {
-		return totalDays;
-	}
-	public void setTotalDays(Integer totalDays) {
-		this.totalDays = totalDays;
-	}
-	
 	public Integer getActualWorkingDays() {
 		return actualWorkingDays;
 	}
@@ -46,5 +34,4 @@ public class MonthlySalaryRequestDTO {
 		this.actualWorkingDays = actualWorkingDays;
 	}
 	
-
 }

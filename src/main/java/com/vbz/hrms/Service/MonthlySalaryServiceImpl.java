@@ -2,6 +2,7 @@ package com.vbz.hrms.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -52,60 +53,132 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
     
 	User generatedBy = userRepo.findById(userId)
 	        .orElseThrow(() -> new EntityNotFoundException("HR not found"));
+	
+	 if (monthlyRepo.existsByMonthAndYear(dto.getMonth(), dto.getYear())) {
+      throw new IllegalStateException("Salary already generated for this month");
+   }
+	 
+//if (dto.getTotalDays() <= 0 || dto.getActualWorkingDays() < 0) {
+	    //throw new IllegalArgumentException("Invalid working days");
+	//}
+	
 
-        
-	if (dto.getTotalDays() <= 0 || dto.getActualWorkingDays() < 0) {
-	    throw new IllegalArgumentException("Invalid working days");
+//	if (dto.getActualWorkingDays() > dto.getTotalDays()) {
+//	    throw new IllegalArgumentException("Actual working days cannot exceed total days");
+//	}
+	
+//        User employee = userRepo.findById(dto.getUserId())
+//                .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
+
+//        if (monthlyRepo.existsByUserAndMonthAndYear(employee, dto.getMonth(), dto.getYear())) {
+//            throw new IllegalStateException("Salary already generated for this month");
+//        }
+//
+//        SalaryDetails salary = salaryRepo.findByUser(employee)
+//                .orElseThrow(() -> new RuntimeException("Salary details not set"));
+//        
+//        BigDecimal months = BigDecimal.valueOf(12);
+//        
+//        BigDecimal basicPerMonth = salary.getBasic().divide(months, 2, RoundingMode.HALF_UP);
+//        BigDecimal hraPerMonth = salary.getHra().divide(months, 2, RoundingMode.HALF_UP);
+//        BigDecimal convPerMonth = salary.getConveyanceAllowance().divide(months, 2, RoundingMode.HALF_UP);
+//
+//        BigDecimal totalDays = BigDecimal.valueOf(dto.getTotalDays());
+//        BigDecimal workedDays =BigDecimal.valueOf(dto.getActualWorkingDays());
+//
+//        BigDecimal basicPay = basicPerMonth.divide(totalDays, 2, RoundingMode.HALF_UP).multiply(workedDays);
+//        BigDecimal hraPay = hraPerMonth.divide(totalDays, 2, RoundingMode.HALF_UP).multiply(workedDays);
+//        BigDecimal convPay = convPerMonth.divide(totalDays, 2, RoundingMode.HALF_UP).multiply(workedDays);
+//
+//        BigDecimal totalSalary = basicPay.add(hraPay).add(convPay).setScale(2, RoundingMode.HALF_UP);
+//
+//        MonthlySalary ms = new MonthlySalary();
+//        ms.setUser(employee);
+//        ms.setGeneratedBy(generatedBy);
+//        ms.setMonth(dto.getMonth());
+//        ms.setYear(dto.getYear());
+//        ms.setTotalDays(dto.getTotalDays());
+//        ms.setActualWorkingDays(dto.getActualWorkingDays());
+//        ms.setBasic(basicPay);
+//        ms.setHra(hraPay);
+//        ms.setConveyanceAllowance(convPay);
+//        ms.setTotalSalary(totalSalary);
+//        
+//        monthlyRepo.save(ms);
+//
+//        return "Monthly salary generated successfully";
+//    }
+	    int totalDays = YearMonth.of(dto.getYear(), dto.getMonth()).lengthOfMonth();
+	    
+	    int actualWorkingDays = dto.getActualWorkingDays() != null
+                ? dto.getActualWorkingDays()
+                : totalDays;
+
+	    if (actualWorkingDays > totalDays) {
+	    	throw new IllegalArgumentException("Actual working days cannot exceed total days");
+	    }
+
+	    
+	    List<User> employees = userRepo.findAllActiveEmployees();
+
+	    for (User employee : employees) {
+
+	        if (monthlyRepo.existsByUserAndMonthAndYear(employee, dto.getMonth(), dto.getYear())) {
+	            continue; 
+	        }
+
+	        SalaryDetails salary = salaryRepo.findByUser(employee)
+	                .orElse(null);
+
+	        if (salary == null) {
+	            continue; 
+	        }
+
+	        BigDecimal basicPerMonth =
+	                salary.getBasic().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+	        BigDecimal hraPerMonth =
+	                salary.getHra().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+	        BigDecimal convPerMonth =
+	                salary.getConveyanceAllowance().divide(BigDecimal.valueOf(12), 2, RoundingMode.HALF_UP);
+
+	        BigDecimal totalDaysBD = BigDecimal.valueOf(totalDays);
+	        BigDecimal workedDaysBD = BigDecimal.valueOf(actualWorkingDays);
+
+	        BigDecimal basicPay =
+	                basicPerMonth.divide(totalDaysBD, 2, RoundingMode.HALF_UP)
+	                        .multiply(workedDaysBD);
+
+	        BigDecimal hraPay =
+	                hraPerMonth.divide(totalDaysBD, 2, RoundingMode.HALF_UP)
+	                        .multiply(workedDaysBD);
+
+	        BigDecimal convPay =
+	                convPerMonth.divide(totalDaysBD, 2, RoundingMode.HALF_UP)
+	                        .multiply(workedDaysBD);
+
+	        BigDecimal totalSalary =
+	                basicPay.add(hraPay).add(convPay).setScale(2, RoundingMode.HALF_UP);
+
+	        MonthlySalary ms = new MonthlySalary();
+	        ms.setUser(employee);
+	        ms.setGeneratedBy(generatedBy);
+	        ms.setMonth(dto.getMonth());
+	        ms.setYear(dto.getYear());
+	        ms.setTotalDays(totalDays);
+	        ms.setActualWorkingDays(actualWorkingDays);
+	        ms.setBasic(basicPay);
+	        ms.setHra(hraPay);
+	        ms.setConveyanceAllowance(convPay);
+	        ms.setPf(BigDecimal.ZERO);
+	        ms.setTotalSalary(totalSalary);
+
+	        monthlyRepo.save(ms);
+	    }
+
+	    return "Monthly salary generated successfully";
 	}
-
-	if (dto.getActualWorkingDays() > dto.getTotalDays()) {
-	    throw new IllegalArgumentException("Actual working days cannot exceed total days");
-	}
-
-        User employee = userRepo.findById(dto.getUserId())
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found"));
-
-        if (monthlyRepo.existsByUserAndMonthAndYear(employee, dto.getMonth(), dto.getYear())) {
-            throw new IllegalStateException("Salary already generated for this month");
-        }
-
-        SalaryDetails salary = salaryRepo.findByUser(employee)
-                .orElseThrow(() -> new RuntimeException("Salary details not set"));
-        
-        BigDecimal months = BigDecimal.valueOf(12);
-        
-        // Yearly to Monthly
-        BigDecimal basicPerMonth = salary.getBasic().divide(months, 2, RoundingMode.HALF_UP);
-        BigDecimal hraPerMonth = salary.getHra().divide(months, 2, RoundingMode.HALF_UP);
-        BigDecimal convPerMonth = salary.getConveyanceAllowance().divide(months, 2, RoundingMode.HALF_UP);
-       
-        // Per day
-        BigDecimal totalDays = BigDecimal.valueOf(dto.getTotalDays());
-        BigDecimal workedDays =BigDecimal.valueOf(dto.getActualWorkingDays());
-
-        BigDecimal basicPay = basicPerMonth.divide(totalDays, 2, RoundingMode.HALF_UP).multiply(workedDays);
-        BigDecimal hraPay = hraPerMonth.divide(totalDays, 2, RoundingMode.HALF_UP).multiply(workedDays);
-        BigDecimal convPay = convPerMonth.divide(totalDays, 2, RoundingMode.HALF_UP).multiply(workedDays);
-
-        BigDecimal totalSalary = basicPay.add(hraPay).add(convPay).setScale(2, RoundingMode.HALF_UP);
-
-        MonthlySalary ms = new MonthlySalary();
-        ms.setUser(employee);
-        ms.setGeneratedBy(generatedBy);
-        ms.setMonth(dto.getMonth());
-        ms.setYear(dto.getYear());
-        ms.setTotalDays(dto.getTotalDays());
-        ms.setActualWorkingDays(dto.getActualWorkingDays());
-        ms.setBasic(basicPay);
-        ms.setHra(hraPay);
-        ms.setConveyanceAllowance(convPay);
-        ms.setTotalSalary(totalSalary);
-        
-        monthlyRepo.save(ms);
-
-        return "Monthly salary generated successfully";
-    }
-
+	    
+	    
     @Override
     public List<MonthlySalaryResponseDTO> getSalaryByMonthYear(Integer year, Integer month) {
         return monthlyRepo.findByMonthAndYear(month, year).stream().map(this::map).toList();
@@ -172,7 +245,7 @@ public class MonthlySalaryServiceImpl implements MonthlySalaryService {
                 .orElseThrow(() ->
                         new RuntimeException("Salary not generated for selected month"));
 
-        return map(salary); // reuse your existing mapper
+        return map(salary); 
     }
 
 }
