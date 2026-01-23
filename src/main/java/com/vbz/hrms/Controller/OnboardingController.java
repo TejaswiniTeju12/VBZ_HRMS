@@ -5,11 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import com.vbz.hrms.dto.JobDetailsDTO;
 import com.vbz.hrms.dto.OnboardingRequestDTO;
+import com.vbz.hrms.dto.OnboardingResponseDTO;
 import com.vbz.hrms.service.OnboardingService;
 
 @RestController
-@RequestMapping("/api/onboarding")
+@RequestMapping("/onboarding")
 public class OnboardingController {
 
     private final OnboardingService onboardingService;
@@ -31,4 +33,17 @@ public class OnboardingController {
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
+    
+    @GetMapping("/self/{userId}")
+    public ResponseEntity<OnboardingResponseDTO> getSelfProfile(
+            @PathVariable Long userId) {
+
+        return ResponseEntity.ok(
+                onboardingService.getSelfProfile(userId)
+        );
+    }
 }
+   
+    
+
+

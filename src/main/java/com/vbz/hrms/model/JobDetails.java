@@ -102,7 +102,6 @@ public class JobDetails {
     @JoinColumn(name = "user_id")
     private User user;
 
- 
     private LocalDateTime createdOn;
 
  

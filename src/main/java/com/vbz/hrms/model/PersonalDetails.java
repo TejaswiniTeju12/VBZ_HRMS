@@ -20,7 +20,6 @@ public class PersonalDetails {
     private String lastName;
   
     private String gender;
-
     private LocalDate dob;
 
     private String nationality;
@@ -37,6 +36,7 @@ public class PersonalDetails {
 
     private String emergencyContactName;
     private String emergencyPhoneNumber;
+    
     
     public Long getId() {
 		return id;
