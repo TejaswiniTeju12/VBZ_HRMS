@@ -1,61 +1,24 @@
 package com.vbz.hrms.service;
 
-import org.springframework.stereotype.Service;
-import com.vbz.hrms.dto.CreateUserRequest;
-import com.vbz.hrms.entity.RoleMaster;
-import com.vbz.hrms.entity.Users;
-import com.vbz.hrms.repository.RoleMasterRepository;
-import com.vbz.hrms.repository.UserRepository;
+import com.vbz.hrms.dto.GetUserIdResponseDTO;
+import com.vbz.hrms.dto.RoleReq;
+import com.vbz.hrms.dto.UserRequestDto;
+import com.vbz.hrms.dto.UserRoleRequestDto;
+import com.vbz.hrms.model.Role_Master;
+import com.vbz.hrms.model.User;
+import com.vbz.hrms.model.User_Role;
 
-@Service
-public class UserService {
+import jakarta.servlet.http.HttpSession;
 
-    private final UserRepository userRepository;
-    private final RoleMasterRepository roleRepository;
+public interface UserService {
+	
+	public User addUser(UserRequestDto  dto);
 
-    public UserService(UserRepository userRepository,
-                       RoleMasterRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
+ String login(UserRequestDto dto, HttpSession session);
 
-    public Users createUser(CreateUserRequest request) {
+ Role_Master createRole(RoleReq dto);
 
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("User already exists");
-        }
-        
-        RoleMaster role = roleRepository
-                .findByRoleName(request.getRoleName())
-                .orElseThrow(() ->
-                        new RuntimeException("Role not found"));
-
-        Users user = new Users();
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setRole(role);
-
-        return userRepository.save(user);
-    }
-
-    public Users login(String username, String password) {
-
-        return userRepository
-                .findByUsernameAndPassword(username, password)
-                .orElseThrow(() ->
-                        new RuntimeException("Invalid username or password"));
-    }
-    
-    public void changePassword(Long userId, String oldPassword, String newPassword) {
-
-        Users user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        if (!user.getPassword().equals(oldPassword)) {
-            throw new RuntimeException("Old password is incorrect");
-        }
-
-        user.setPassword(newPassword);
-        userRepository.save(user);
-    }
+ User_Role assignRole(UserRoleRequestDto dto, HttpSession session);
+ 
+ GetUserIdResponseDTO getUserIdByUserName(String username);
 }

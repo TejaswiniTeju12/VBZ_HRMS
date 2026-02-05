@@ -1,5 +1,6 @@
 package com.vbz.hrms.Respositoy;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,8 @@ public interface UserResp extends JpaRepository<User, Long> {
 	 
 	@Query("SELECT MAX(u.id) FROM User u")
     Long findMaxUserId();
+	
+	@Query("SELECT u FROM User u WHERE u.status = 1")
+	List<User> findAllActiveEmployees();
+
 }

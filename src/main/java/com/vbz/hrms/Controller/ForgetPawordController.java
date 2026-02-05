@@ -1,4 +1,4 @@
-package com.vbz.hrms.Controller;
+package com.vbz.hrms.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vbz.hrms.Service.ForgetPasswordServive;
 import com.vbz.hrms.dto.ForgetPawwordDto;
 import com.vbz.hrms.dto.ProfilePasswordDto;
 import com.vbz.hrms.dto.SetPassword;
+import com.vbz.hrms.service.ForgetPasswordServive;
 
 import jakarta.servlet.http.HttpSession;
 

@@ -1,4 +1,4 @@
-package com.vbz.hrms.Controller;
+package com.vbz.hrms.controller;
 
 import java.util.List;
 
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vbz.hrms.Service.LeaveService;
 import com.vbz.hrms.dto.LeaveDto;
 import com.vbz.hrms.model.Leave;
+import com.vbz.hrms.service.LeaveService;
 
 import jakarta.servlet.http.HttpSession;
 

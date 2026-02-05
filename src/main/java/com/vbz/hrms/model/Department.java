@@ -70,8 +70,7 @@ public class Department {
     @JoinColumn(name = "created_by")
     @JsonIgnore
     private User createdBy;
-
-
+    
     private LocalDateTime createdOn;
 
 

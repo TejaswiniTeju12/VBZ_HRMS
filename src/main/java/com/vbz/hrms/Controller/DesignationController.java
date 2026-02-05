@@ -1,11 +1,11 @@
-package com.vbz.hrms.Controller;
+package com.vbz.hrms.controller;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.vbz.hrms.Service.DesignationService;
 import com.vbz.hrms.dto.DesignationResponseDTO;
+import com.vbz.hrms.service.DesignationService;
 
 @RestController
 @RequestMapping("/api/designations")

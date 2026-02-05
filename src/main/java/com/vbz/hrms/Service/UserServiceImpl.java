@@ -1,13 +1,16 @@
-package com.vbz.hrms.Service;
+package com.vbz.hrms.service;
 import com.vbz.hrms.Respositoy.Role_MatsreRespo;
 
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import com.vbz.hrms.dto.GetUserIdRequestDTO;
 import com.vbz.hrms.model.Role_Master;
 import com.vbz.hrms.Respositoy.Role_MatsreRespo;
 import com.vbz.hrms.Respositoy.UserResp;
 import com.vbz.hrms.Respositoy.User_RoleRespo;
+import com.vbz.hrms.dto.GetUserIdResponseDTO;
 import com.vbz.hrms.dto.RoleReq;
 import com.vbz.hrms.dto.UserRequestDto;
 import com.vbz.hrms.dto.UserRoleRequestDto;
@@ -73,6 +76,8 @@ public class UserServiceImpl implements UserService {
 	            .orElseThrow(() -> new RuntimeException("User role not assigned"));
 	    
 	    session.setAttribute("LOGGED_IN_USER_ID", user.getId());
+	    session.setAttribute("LOGGED_IN_ROLE", userRole.getRole().getRoleName());  
+
 
 	    return userRole.getRole().getId() + ",  status : " + user.getStatus();
 	}
@@ -100,7 +105,6 @@ public class UserServiceImpl implements UserService {
 	            throw new RuntimeException("User not logged in");
 	        }
 	   
-
 	        User user = userResp.findById(dto.getUserId())
 	                .orElseThrow(() -> new RuntimeException("User not found"));
 	       
@@ -113,20 +117,23 @@ public class UserServiceImpl implements UserService {
 		    	throw new RuntimeException("User already exists" + user.getUsername());
 		    }
 	        
-	       
 	        User_Role userRole = new User_Role();
 	        userRole.setUser(user);
 	        userRole.setRole(role);
 	        userRole.setCreatedBy(createdBy);
 	        return user_RoleRespo.save(userRole);
-
 	      
 	    }
 
-	
+	@Override
+	public GetUserIdResponseDTO getUserIdByUserName(String username) {
+		User user = userResp.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+		GetUserIdResponseDTO dto = new GetUserIdResponseDTO();
+	    dto.setUserId(user.getId());
+	    dto.setUsername(user.getUsername());
+
+	    return dto;
+	}
 
 	
-	
-	
-
 }
